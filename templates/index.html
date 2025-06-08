@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Kripto Uzman Sistemi</title>
+</head>
+<body>
+    <h2>Kripto Para Yatırım Öneri Sistemi</h2>
+    <form method="POST">
+       <label>Coin(leri) Seçin:</label><br>
+        <select name="symbols" multiple size="5">
+            <option value="BTCUSDT">Bitcoin (BTC)</option>
+            <option value="ETHUSDT">Ethereum (ETH)</option>
+            <option value="SOLUSDT">Solana (SOL)</option>
+            <option value="BNBUSDT">BNB</option>
+            <option value="XRPUSDT">Ripple (XRP)</option>
+        </select><br><br>
+
+
+        <label>Risk Düzeyi:</label>
+        <select name="risk">
+            <option value="düşük">Düşük</option>
+            <option value="orta">Orta</option>
+            <option value="yüksek">Yüksek</option>
+        </select><br><br>
+
+        <label>Yatırım Süresi:</label>
+        <select name="term">
+            <option value="kısa">Kısa</option>
+            <option value="orta">Orta</option>
+            <option value="uzun">Uzun</option>
+        </select><br><br>
+
+        <button type="submit">Öneri Al</button>
+    </form>
+
+   {% if result %}
+    <h3>Öneriler:</h3>
+    {% for item in result %}
+        <h4>{{ item.symbol }}</h4>
+        <ul>
+            {% for advice in item.advice %}
+                <li>{{ advice }}</li>
+            {% endfor %}
+        </ul>
+        <img src="{{ item.plot }}" width="600">
+        <hr>
+    {% endfor %}
+{% endif %}
+<p><strong>Makine Öğrenmesi Tahmini:</strong> {{ item.ml_advice }}</p>
+
+</body>
+</html>
