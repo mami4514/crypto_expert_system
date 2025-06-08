@@ -1,52 +1,86 @@
 <!DOCTYPE html>
-<html>
+<html lang="tr">
 <head>
+    <meta charset="UTF-8">
     <title>Kripto Uzman Sistemi</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f3f3f3; margin: 0; padding: 0; }
+        .container { max-width: 900px; margin: auto; background: #fff; padding: 20px; margin-top: 30px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        h1, h3 { text-align: center; color: #2c3e50; }
+        form { margin-bottom: 20px; }
+        label { display: block; margin-top: 10px; font-weight: bold; }
+        select, input[type="submit"] { padding: 8px; width: 100%; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px; }
+        button { margin-top: 10px; padding: 10px; border: none; background-color: #3498db; color: white; border-radius: 4px; cursor: pointer; }
+        button:hover { background-color: #2980b9; }
+        .result { background: #ecf0f1; padding: 15px; margin-top: 20px; border-radius: 5px; }
+        .warning { color: #e74c3c; font-weight: bold; }
+        .plot { max-width: 100%; margin-top: 10px; }
+        ul { padding-left: 20px; }
+    </style>
 </head>
 <body>
-    <h2>Kripto Para Yatırım Öneri Sistemi</h2>
-    <form method="POST">
-       <label>Coin(leri) Seçin:</label><br>
-        <select name="symbols" multiple size="5">
-            <option value="BTCUSDT">Bitcoin (BTC)</option>
-            <option value="ETHUSDT">Ethereum (ETH)</option>
-            <option value="SOLUSDT">Solana (SOL)</option>
-            <option value="BNBUSDT">BNB</option>
-            <option value="XRPUSDT">Ripple (XRP)</option>
-        </select><br><br>
+    <div class="container">
+        <h1>📈 Kripto Uzman Sistemi</h1>
 
+        <form method="post">
+            <label>Coin Seçin:</label>
+            <select name="symbols" multiple>
+                <option value="BTCUSDT">BTC/USDT</option>
+                <option value="ETHUSDT">ETH/USDT</option>
+                <option value="BNBUSDT">BNB/USDT</option>
+            </select>
 
-        <label>Risk Düzeyi:</label>
-        <select name="risk">
-            <option value="düşük">Düşük</option>
-            <option value="orta">Orta</option>
-            <option value="yüksek">Yüksek</option>
-        </select><br><br>
+            <label>Risk Tercihi:</label>
+            <select name="risk">
+                <option value="düşük">Düşük</option>
+                <option value="orta">Orta</option>
+                <option value="yüksek">Yüksek</option>
+            </select>
 
-        <label>Yatırım Süresi:</label>
-        <select name="term">
-            <option value="kısa">Kısa</option>
-            <option value="orta">Orta</option>
-            <option value="uzun">Uzun</option>
-        </select><br><br>
+            <label>Yatırım Süresi:</label>
+            <select name="term">
+                <option value="kısa">Kısa Vadeli</option>
+                <option value="orta">Orta Vadeli</option>
+                <option value="uzun">Uzun Vadeli</option>
+            </select>
 
-        <button type="submit">Öneri Al</button>
-    </form>
+            <input type="submit" value="Öneri Al">
+        </form>
 
-   {% if result %}
-    <h3>Öneriler:</h3>
-    {% for item in result %}
-        <h4>{{ item.symbol }}</h4>
-        <ul>
-            {% for advice in item.advice %}
-                <li>{{ advice }}</li>
+        <button onclick="document.getElementById('kurallar').style.display='block'">📘 Kurallar Nasıl Çalışıyor?</button>
+        <div id="kurallar" style="display:none; background:#dff9fb; padding:10px; margin-top:10px; border-radius:5px;">
+            <ul>
+                <li>RSI &lt; 40 ve MACD > Signal → Alım önerisi</li>
+                <li>RSI &gt; 65 ve MACD &lt; Signal → Satış önerisi</li>
+                <li>Risk tercihi ve süreye göre değerlendirme yapılır</li>
+                <li>Kural ve model farklı sonuç verirse kullanıcı uyarılır</li>
+            </ul>
+        </div>
+
+        {% if result %}
+            <h3>📊 Öneri Sonuçları</h3>
+            {% for item in result %}
+                <div class="result">
+                    <h4>{{ item.symbol }}</h4>
+                    <p><strong>RSI:</strong> {{ item.rsi }}</p>
+                    <p><strong>MACD:</strong> {{ item.macd }}</p>
+                    <p><strong>MACD Sinyali:</strong> {{ item.macd_signal }}</p>
+
+                    <p><strong>Kurallara Göre Öneri:</strong></p>
+                    <ul>
+                        {% for a in item.advice %}
+                        <li>{{ a }}</li>
+                        {% endfor %}
+                    </ul>
+
+                    <p><strong>Sistem Açıklaması:</strong> {{ item.explanation }}</p>
+                    <p><strong>ML Tahmini:</strong> {{ item.ml_advice }}</p>
+                    <p><strong>ML Güven Skoru:</strong> {{ item.confidence }}</p>
+
+                    <img class="plot" src="{{ item.plot }}">
+                </div>
             {% endfor %}
-        </ul>
-        <img src="{{ item.plot }}" width="600">
-        <hr>
-    {% endfor %}
-{% endif %}
-
-
+        {% endif %}
+    </div>
 </body>
 </html>

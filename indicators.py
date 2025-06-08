@@ -1,6 +1,9 @@
 import pandas_ta as ta
+import matplotlib
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import os
+import time
 
 def calculate_indicators(df):
     df['RSI'] = ta.rsi(df['close'], length=14)
@@ -18,9 +21,9 @@ def plot_indicators(df, symbol):
     plt.title(f"{symbol} RSI & MACD")
     plt.xticks(rotation=45)
     plt.tight_layout()
-
-    plot_path = f"static/plots/{symbol}.png"
+    timestamp = int(time.time())
+    plot_path = f"static/plots/{symbol}_{timestamp}.png"
     os.makedirs("static/plots", exist_ok=True)
     plt.savefig(plot_path)
-    plt.close()
+    plt.close('all')
     return plot_path

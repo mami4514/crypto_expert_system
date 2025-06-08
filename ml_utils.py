@@ -53,9 +53,9 @@ def prepare_ml_dataset(symbol="BTCUSDT"):
     df["price_change"] = (df["future_price"] - df["close"]) / df["close"]
 
     def label(row):
-        if row["price_change"] > 0.01:
+        if row["price_change"] > 0.05:
             return 1
-        elif row["price_change"] < -0.01:
+        elif row["price_change"] < -0.05:
             return -1
         else:
             return 0
